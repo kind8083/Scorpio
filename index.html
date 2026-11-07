@@ -210,6 +210,80 @@ footer{text-align:center;padding:30px;color:#8e7c63;font-size:13px}
 .reveal{opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s}
 .reveal.in{opacity:1;transform:none}
 @media(max-width:700px){.bar nav{display:none}.card{padding:24px 18px}.sheet{padding:34px 22px}}
+
+
+/* ===== ПЛЕЕР С ТЕКСТОМ ===== */
+#song{padding:100px 0}
+.sb{position:relative;display:grid;grid-template-columns:minmax(250px,330px) minmax(0,1fr);gap:clamp(20px,4vw,48px);
+  padding:clamp(18px,3.5vw,36px);border-radius:30px;overflow:hidden;
+  background:linear-gradient(145deg,rgba(255,255,255,.08),rgba(255,255,255,.02));
+  border:1px solid rgba(255,255,255,.12);box-shadow:0 30px 80px rgba(0,0,0,.45)}
+.sb::before,.sb::after{content:"";position:absolute;width:420px;height:420px;border-radius:50%;pointer-events:none;filter:blur(10px)}
+.sb::before{left:-140px;top:-160px;background:radial-gradient(circle,rgba(217,102,122,.30),transparent 65%)}
+.sb::after{right:-160px;bottom:-180px;background:radial-gradient(circle,rgba(227,154,59,.24),transparent 65%)}
+.sb>*{position:relative;z-index:1}
+
+.sb-player{display:flex;flex-direction:column;align-items:center;gap:18px;min-width:0}
+.sb-disc{width:clamp(150px,46vw,230px);aspect-ratio:1;border-radius:50%;position:relative;flex:none;
+  background:conic-gradient(from 0deg,var(--rose),var(--amber),var(--paper),var(--rose));
+  box-shadow:0 0 60px rgba(217,102,122,.4),0 18px 40px rgba(0,0,0,.5);
+  animation:sbSpin 14s linear infinite;animation-play-state:paused}
+.sb-disc::before{content:"";position:absolute;inset:7%;border-radius:50%;
+  background:repeating-radial-gradient(circle,#15100d 0 3px,#201813 3px 6px)}
+.sb-disc::after{content:"";position:absolute;inset:36%;border-radius:50%;
+  background:radial-gradient(circle,#140e0a 0 14%,var(--rose) 15% 70%,var(--amber) 71%)}
+.sb.playing .sb-disc{animation-play-state:running}
+@keyframes sbSpin{to{transform:rotate(360deg)}}
+
+.sb-meta{text-align:center}
+.sb-title{font-family:var(--serif);font-style:italic;font-size:clamp(28px,5vw,36px);line-height:1.1}
+.sb-artist{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:6px;color:#bfae92;letter-spacing:.14em;text-transform:uppercase;font-size:13px}
+.sb-eq{display:inline-flex;align-items:flex-end;gap:2px;height:14px}
+.sb-eq i{width:3px;height:30%;border-radius:2px;background:linear-gradient(var(--amber),var(--rose));animation:sbEq .9s ease-in-out infinite;animation-play-state:paused}
+.sb-eq i:nth-child(2){animation-delay:.2s}.sb-eq i:nth-child(3){animation-delay:.45s}.sb-eq i:nth-child(4){animation-delay:.1s}
+.sb.playing .sb-eq i{animation-play-state:running}
+@keyframes sbEq{0%,100%{height:25%}50%{height:100%}}
+
+.sb-bar{width:100%}
+.sb-prog{height:24px;display:flex;align-items:center;cursor:pointer;touch-action:none}
+.sb-track{position:relative;width:100%;height:6px;border-radius:6px;background:rgba(255,255,255,.14)}
+.sb-fill{position:absolute;inset:0 auto 0 0;width:0;border-radius:6px;background:linear-gradient(90deg,var(--rose),var(--amber))}
+.sb-knob{position:absolute;top:50%;left:0;width:16px;height:16px;border-radius:50%;background:#fff;
+  transform:translate(-50%,-50%);box-shadow:0 0 12px rgba(217,102,122,.9);transition:transform .15s}
+.sb-prog:hover .sb-knob{transform:translate(-50%,-50%) scale(1.25)}
+.sb-times{display:flex;justify-content:space-between;font-size:12px;color:#bfae92;font-variant-numeric:tabular-nums}
+
+.sb-ctrl{display:flex;align-items:center;gap:16px}
+.sb-ctrl button{width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);
+  color:var(--paper);font-size:16px;transition:.2s;display:grid;place-items:center}
+.sb-ctrl button:hover{background:rgba(255,255,255,.2);transform:scale(1.07)}
+.sb-ctrl button:active{transform:scale(.94)}
+.sb-ctrl .sb-play{width:68px;height:68px;font-size:24px;border:0;background:linear-gradient(135deg,var(--rose),var(--amber));box-shadow:0 10px 30px rgba(217,102,122,.45)}
+.sb-vol{display:flex;align-items:center;gap:10px;color:#bfae92;font-size:14px}
+.sb-vol input{accent-color:var(--rose);width:120px}
+
+.sb-lyrics{--ly-h:clamp(300px,56vh,480px);position:relative;height:var(--ly-h);overflow-y:auto;scroll-behavior:smooth;
+  padding-block:calc(var(--ly-h)/2 - 24px);padding-inline:6px;overscroll-behavior:contain;scrollbar-width:none;
+  -webkit-mask-image:linear-gradient(transparent,#000 22%,#000 78%,transparent);
+          mask-image:linear-gradient(transparent,#000 22%,#000 78%,transparent)}
+.sb-lyrics::-webkit-scrollbar{display:none}
+.sb-line{font-family:var(--serif);font-style:italic;font-size:clamp(20px,2.6vw,28px);line-height:1.35;margin:14px 0;
+  color:rgba(246,236,217,.28);cursor:pointer;transition:color .35s,transform .35s,text-shadow .35s;overflow-wrap:anywhere}
+.sb-line:hover{color:rgba(246,236,217,.6)}
+.sb-line.active{color:var(--paper);transform:translateX(8px);text-shadow:0 0 26px rgba(217,102,122,.75)}
+.sb-line.gap{height:18px;margin:0;cursor:default}
+
+@media(max-width:860px){
+  #song{padding:70px 0}
+  .sb{grid-template-columns:minmax(0,1fr);border-radius:24px}
+  .sb-player{max-width:420px;margin:0 auto;width:100%}
+  .sb-lyrics{--ly-h:clamp(240px,40vh,320px)}
+  .sb-line.active{transform:none}
+}
+@media(hover:none){.sb-vol{display:none}}
+@media(prefers-reduced-motion:reduce){.sb-disc,.sb-eq i{animation:none}.sb-lyrics{scroll-behavior:auto}}
+
+  
 </style>
 </head>
 <body class="locked">
@@ -423,6 +497,38 @@ footer{text-align:center;padding:30px;color:#8e7c63;font-size:13px}
     </div>
   </div>
 </div>
+  
+  <!-- ПЕСНЯ -->
+<section id="song">
+  <div class="wrap">
+    <div class="head reveal">
+      <small>музыкальная пауза</small>
+    </div>
+    <div class="sb reveal" id="sbBlock">
+      <div class="sb-player">
+        <div class="sb-disc"></div>
+        <div class="sb-meta">
+          <h4 class="sb-title">Numb</h4>
+          <div class="sb-artist"><span>9mice</span><span class="sb-eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span></div>
+        </div>
+        <div class="sb-bar">
+          <div class="sb-prog" id="sbProg"><div class="sb-track"><div class="sb-fill" id="sbFill"></div><div class="sb-knob" id="sbKnob"></div></div></div>
+          <div class="sb-times"><span id="sbCur">0:00</span><span id="sbDur">0:00</span></div>
+        </div>
+        <div class="sb-ctrl">
+          <button id="sbBack" aria-label="Назад на 10 секунд">⏪</button>
+          <button id="sbPlay" class="sb-play" aria-label="Играть или пауза">▶</button>
+          <button id="sbFwd" aria-label="Вперёд на 10 секунд">⏩</button>
+        </div>
+        <label class="sb-vol">🔈 <input id="sbVol" type="range" min="0" max="1" step="0.01" value="0.8" aria-label="Громкость"></label>
+        <audio id="sbAudio" src="numb.mp3" preload="metadata"></audio>
+      </div>
+      <div class="sb-lyrics" id="sbLyrics"></div>
+    </div>
+  </div>
+</section>
+
+  
 <canvas id="fwCanvas"></canvas>
 <div id="starFinale">
   <div>
@@ -436,6 +542,117 @@ footer{text-align:center;padding:30px;color:#8e7c63;font-size:13px}
 <div class="toast" id="toast"></div>
 
 <script>
+/* ================== ПЛЕЕР С ТЕКСТОМ ==================
+   Аудио: файл numb.mp3 рядом с index.html (или поменяй src у <audio id="sbAudio">).
+   Текст: массив LYRICS ниже. t — секунда начала строки, "" — пауза между куплетами.
+   ====================================================== */
+(function(){
+const LYRICS = [
+  { t: 0, text: "А-а, а-а-а, а-а" },
+    { t: 3, text: "А-а, а-а (Кхе)" },
+
+    // Куплет
+    { t: 11, text: "Я не могу больше так жить" },
+    { t: 13, text: "С гордыней наблюдая, как весь мой мир горит" },
+    { t: 16, text: "Моя боль перманентна, её нечем лечить" },
+    { t: 19, text: "Пытаюсь вспомнить, как не оглядываясь жить" },
+    { t: 22, text: "Ведь сердце человека лукавее всего, но" },
+    { t: 26, text: "Я не жалею в своей жизни ни о чём" },
+    { t: 29, text: "С гордостью ношу каждую рану — это мой урок" },
+    { t: 32, text: "Е, я знаю, тот, кто нас создал, он точно самый лучший режиссёр" },
+    { t: 36, text: "Е, уже даже закончились слёзы" },
+    { t: 39, text: "Топор войны гниёт в земле, но я там жду розы" },
+    { t: 42, text: "Все, кем ты дорожишь, уходят рано или поздно" },
+    { t: 45, text: "Сегодня я остался один на один с Богом" },
+    { t: 48, text: "Мне всё равно на моду, я хочу быть благородным" },
+    { t: 51, text: "Оставить что-то для семьи — мой неподвижный фокус" },
+    { t: 54, text: "Стремлюсь познать язык с собой, принять души природу" },
+    { t: 57, text: "Прошу простить моих врагов меня, я стал свободен" },
+
+    // Припев
+    { t: 60, text: "Я-я больше не твой" },
+    { t: 65, text: "Не могу поверить, что я чужой" },
+    { t: 71, text: "Я-я больше не твой" },
+    { t: 77, text: "Не могу поверить, что я чужой (Что я чужой)" },
+
+    { t: 84, text: "Я-я больше не твой (Я больше не тво-ой)" },
+    { t: 89, text: "Не могу поверить, что я чужой (Я для тебя чужо-ой)" },
+    { t: 96, text: "Я-я больше не твой" },
+    { t: 101, text: "Не могу поверить, что я чужой" },
+
+    // Бридж
+    { t: 110, text: "Я знаю, я сделал очень много da—" },
+    { t: 113, text: "Я знаю, я сделал очень много da—" },
+    { t: 117, text: "Я знаю, я сделал очень много damage" },
+    { t: 120, text: "Я онемел от боли" },
+    { t: 128, text: "У-у" },
+
+    // Концовка
+    { t: 132, text: "А-а, а-а-а, а-а" },
+    { t: 148, text: "А-а, а-а" },
+    { t: 152, text: "А-а, а-а-а, а-а" },
+    { t: 155, text: "А-а, а-а" },
+];
+
+const g = id => document.getElementById(id);
+const audio = g('sbAudio'), block = g('sbBlock'), box = g('sbLyrics'), playBtn = g('sbPlay');
+const fill = g('sbFill'), knob = g('sbKnob'), cur = g('sbCur'), dur = g('sbDur'), prog = g('sbProg');
+const fmt = s => isFinite(s) ? Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0') : '0:00';
+
+const els = LYRICS.map(l=>{
+  const d = document.createElement('div');
+  d.className = 'sb-line' + (l.text ? '' : ' gap');
+  d.textContent = l.text;
+  if(l.text) d.onclick = ()=>{ audio.currentTime = l.t; audio.play().catch(()=>{}); };
+  box.appendChild(d);
+  return d;
+});
+
+let active = -1;
+function syncLyrics(){
+  const t = audio.currentTime;
+  let idx = -1;
+  for(let i=0;i<LYRICS.length;i++){ if(LYRICS[i].t <= t && LYRICS[i].text) idx = i; }
+  if(idx === active) return;
+  if(active >= 0) els[active].classList.remove('active');
+  active = idx;
+  if(idx >= 0){
+    const e = els[idx]; e.classList.add('active');
+    box.scrollTo({ top: e.offsetTop - box.clientHeight/2 + e.clientHeight/2, behavior:'smooth' });
+  }
+}
+
+playBtn.onclick = ()=>{ audio.paused ? audio.play().catch(()=>{}) : audio.pause(); };
+g('sbBack').onclick = ()=> audio.currentTime = Math.max(0, audio.currentTime-10);
+g('sbFwd').onclick  = ()=> audio.currentTime = Math.min(audio.duration||0, audio.currentTime+10);
+audio.addEventListener('play',  ()=>{ block.classList.add('playing');    playBtn.textContent='⏸'; });
+audio.addEventListener('pause', ()=>{ block.classList.remove('playing'); playBtn.textContent='▶'; });
+audio.addEventListener('ended', ()=>{ audio.currentTime = 0; });
+audio.addEventListener('loadedmetadata', ()=> dur.textContent = fmt(audio.duration));
+audio.addEventListener('error', ()=> toast('Не нашла numb.mp3. Положи файл рядом с index.html 🎵'));
+audio.addEventListener('timeupdate', ()=>{
+  const p = audio.duration ? audio.currentTime/audio.duration*100 : 0;
+  fill.style.width = p+'%'; knob.style.left = p+'%';
+  cur.textContent = fmt(audio.currentTime);
+  syncLyrics();
+});
+
+let drag = false;
+const seek = e=>{
+  const r = prog.getBoundingClientRect();
+  const p = Math.min(1, Math.max(0, (e.clientX-r.left)/r.width));
+  if(audio.duration) audio.currentTime = p*audio.duration;
+};
+prog.addEventListener('pointerdown', e=>{ drag = true; try{prog.setPointerCapture(e.pointerId)}catch(_){} seek(e); });
+prog.addEventListener('pointermove', e=>{ if(drag) seek(e); });
+['pointerup','pointercancel'].forEach(ev=>prog.addEventListener(ev, ()=>{ drag = false; }));
+
+g('sbVol').oninput = e => audio.volume = e.target.value;
+audio.volume = .8;
+})();
+
+
+  
 /* =========================================================
    ВСЁ РЕДАКТИРУЕТСЯ ЗДЕСЬ: тексты писем, кадры, вопросы.
    Письма написаны от лица каждого. Замени на настоящие слова
